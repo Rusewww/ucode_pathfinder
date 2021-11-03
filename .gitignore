@@ -3,3 +3,5 @@ libmx.a
 .idea
 .DS_Sore
 obj
+test
+./pathfinder
