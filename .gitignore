@@ -5,3 +5,5 @@ libmx.a
 obj
 test
 ./pathfinder
+test
+pathfinder

@@ -1,5 +1,9 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
 void mx_printstr(const char *s) {
-    write(1, s, mx_strlen(s));
+    int a = 0;
+    while (a < mx_strlen(s)) {
+        write(1, &s[a], 1);
+        a++;
+    }
 }

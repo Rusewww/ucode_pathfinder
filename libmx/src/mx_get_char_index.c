@@ -1,13 +1,15 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
-int mx_get_char_index(const char *str, char c) 
-{
-    if (!str)
+int mx_get_char_index(const char *str, char c) {
+    if (str == NULL) {
         return -2;
-    else {
-        for (int i = 0; str[i]; i++)
-            if (str[i] == c)
-                return i;
-        return -1;
     }
+    int i = 0;
+    while (str[i] != '\0') {
+        if (str[i] == c) {
+            return i;
+        }
+        i++;
+    }
+    return -1;
 }

@@ -1,5 +1,5 @@
-#include "libmx.h"
+#include "../inc/libmx.h"
 
-void mx_printchar(char c) {
+void mx_printchar(const char c) {
     write(1, &c, 1);
 }
