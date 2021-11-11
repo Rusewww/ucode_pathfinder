@@ -1,54 +1,56 @@
 #include "../inc/libmx.h"
 
-bool help_visit(char **visit_arr, int count, char *s) {
-    for (int i = 0; i < count; i++) {
-        if (!mx_strcmp(visit_arr[i], s)) {
-            return true;
-        }
-    }
-    return false;
-}
+bool mx_visited(char **visit, char *s, int visit_count);
 
-void mx_weigh_node_arr(int *weights, char **node_arr, t_bridge **bridges, int count) {
-    char **visit_arr = (char **) malloc(count * sizeof *visit_arr);
-    char *tmp;
-    int visits = 0;
+void mx_weigh_node_arr(int *weights, char **node_arr, t_bridge **bridge_arr, int count) {
+    char **visit = (char **) malloc(count * sizeof *visit);
+    char *curr;
+    int visit_count = 0;
     int min = 0;
     int weight = 0;
     for (int i = 0; i < count; i++) {
         min = 0;
-        while (help_visit(visit_arr, visits, node_arr[min])) {
+        while (mx_visited(visit, node_arr[min], visit_count)) {
             min++;
         }
-        if (visits == count) {
-            break;
-        }
+        if (visit_count == count) break;
         for (int j = 0; j < count; j++) {
-            if (help_visit(visit_arr, visits, node_arr[j])) {
+            if (mx_visited(visit, node_arr[j], visit_count)) {
                 continue;
             }
             if (weights[j] >= 0 && (weights[min] < 0 || weights[min] > weights[j])) {
                 min = j;
             }
         }
-        tmp = node_arr[min];
-        for (int j = 0; bridges[j] != NULL; j++) {
-            if (!mx_strcmp(bridges[j]->island1, tmp)) {
-                if (help_visit(visit_arr, visits, bridges[j]->island2)) {
+        curr = node_arr[min];
+        for (int j = 0; bridge_arr[j] != NULL; j++) {
+            if (!mx_strcmp(bridge_arr[j]->island1, curr)) {
+                if (mx_visited(visit, bridge_arr[j]->island2, visit_count)) {
                     continue;
                 }
-                mx_weight_set(&weights, node_arr, bridges[j]->island2, weight + bridges[j]->distance);
-                weight = mx_get_weight(node_arr, weights, tmp);
-            } else if (!mx_strcmp(bridges[j]->island2, tmp)) {
-                if (help_visit(visit_arr, visits, bridges[j]->island1)) {
+                weight = mx_get_weight(node_arr, weights, curr);
+                mx_weight_set(&weights, node_arr, bridge_arr[j]->island2, weight + bridge_arr[j]->distance);
+            } else if (!mx_strcmp(bridge_arr[j]->island2, curr)) {
+                if (mx_visited(visit, bridge_arr[j]->island1, visit_count)) {
                     continue;
                 }
-                mx_weight_set(&weights, node_arr, bridges[j]->island1, weight + bridges[j]->distance);
-                weight = mx_get_weight(node_arr, weights, tmp);
+                weight = mx_get_weight(node_arr, weights, curr);
+                mx_weight_set(&weights, node_arr, bridge_arr[j]->island1, weight + bridge_arr[j]->distance);
             }
         }
-        visit_arr[visits] = tmp;
-        visits++;
+        visit[visit_count] = curr;
+        visit_count++;
     }
-    free(visit_arr);
+    free(visit);
 }
+
+bool mx_visited(char **visit, char *s, int visit_count) {
+    for (int i = 0; i < visit_count; i++) {
+        if (!mx_strcmp(visit[i], s)){
+            return true;
+        }
+
+    }
+    return false;
+}
+
